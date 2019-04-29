@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<script src="index.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+<link data-require="bootstrap-css@2.3.2" data-semver="2.3.2" rel="stylesheet"
+    href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" />
+<script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.11.0.js"></script>
+
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+
+<body ng-app="myApp" ng-controller="main">
+
+    <div class="card">
+        <div class="card-header">
+            <h4> Banks Search Application </h4>
+        </div>
+        <div class="card-body">
+            <div class="row col-md-12">
+           
+            <div  class="col-md-4">
+            <form name="search">
+                <lable>Select City:</lable>
+                <select name="selection" ng-model="location" ng-change="getBank(location)">
+                    <option value=""> -- Please select --</option>
+                    <option value="DELHI">Delhi </option>
+                    <option value="MUMBAI">Mumbai </option>
+                    <option value="CHENNAI">Chennai</option>
+                    <option value="HYDERABAD">Hyderabad</option>
+                    <option value="JAIPUR">Jaipur</option>
+
+                </select>
+            </form>
+        </div>
+            <div class="col-md-4">
+                <input ng-model="searchbank.$" placeholder="Search Anything" style="height: 29px;" type="text" />
+
+            </div>
+            <div class ="col-md-4">
+                View <select ng-model="viewby" ng-change="setItemsPerPage(viewby)"class="col-md-3">
+                    <option>5</option>
+                    <option>10</option>
+                    <option>20</option>
+                    <option>30</option>
+                    <option>40</option>
+                    <option>50</option>
+                </select> records at a time.
+            </div>
+        </div>
+
+        </div>
+        <img ng-if="showrecord1" src="https://media2.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.webp?cid=790b76115cc5f3165a6b4b78739adbc5&rid=giphy.webp">
+        <div class="table-responsive"ng-if = "showrecord">
+            <table class="table" >
+                <thead>
+                    <tr>
+                        <th>
+                            Bank Name
+                        </th>
+                        <th>
+                            IFSC
+                        </th>
+
+                        <th>
+                            Branch
+                        </th>
+                        <th>
+
+                            Address
+
+                        </th>
+
+                    </tr>
+
+                </thead>
+                <tbody>
+                    <tr
+                        ng-repeat="bank in data.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage))  | filter:searchbank:strict">
+                        <td>
+                                <a ng-click="getDetails(bank.ifsc)" href=''>{{bank.bank_name}}</a>
+                            
+                        </td>
+
+                        <td>
+                            {{bank.ifsc}}
+                        </td>
+
+                        <td>
+                            {{bank.branch}}
+                        </td>
+                        <td>
+                            {{bank.address}}
+                        </td>
+
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+      
+            <pagination ng-show = "showrecord" total-items="totalItems" ng-model="currentPage" max-size="maxSize" class="pagination-sm"
+                boundary-links="true" items-per-page="itemsPerPage"></pagination>
+         
+
+    </div>
+
+</body>
+
+</html>
