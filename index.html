@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en-US">
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 <script src="index.js"></script>
@@ -11,6 +11,8 @@
 <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.11.0.js"></script>
 
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.11/ngStorage.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.11/ngStorage.min.js"></script>
 
 <body ng-app="myApp" ng-controller="main">
 
@@ -20,93 +22,130 @@
         </div>
         <div class="card-body">
             <div class="row col-md-12">
-           
-            <div  class="col-md-4">
-            <form name="search">
-                <lable>Select City:</lable>
-                <select name="selection" ng-model="location" ng-change="getBank(location)">
-                    <option value=""> -- Please select --</option>
-                    <option value="DELHI">Delhi </option>
-                    <option value="MUMBAI">Mumbai </option>
-                    <option value="CHENNAI">Chennai</option>
-                    <option value="HYDERABAD">Hyderabad</option>
-                    <option value="JAIPUR">Jaipur</option>
 
-                </select>
-            </form>
+                <div class="col-md-4">
+                    <form name="search">
+                        <lable>Select City:</lable>
+                        <select name="selection" ng-model="location" ng-change="getBank(location)">
+                            <option value=""> -- Please select --</option>
+                            <option value="DELHI">Delhi </option>
+                            <option value="MUMBAI">Mumbai </option>
+                            <option value="CHENNAI">Chennai</option>
+                            <option value="HYDERABAD">Hyderabad</option>
+                            <option value="JAIPUR">Jaipur</option>
+
+                        </select>
+                    </form>
+                </div>
+                <div class="col-md-4">
+                    <input ng-model="searchbank.$" placeholder="Search Anything" style="height: 29px;" type="text" />
+
+                </div>
+                <div class="col-md-4">
+                    View <select ng-model="viewby" ng-change="setItemsPerPage(viewby)" class="col-md-3">
+                        <option>5</option>
+                        <option>10</option>
+                        <option>20</option>
+                        <option>30</option>
+                        <option>40</option>
+                        <option>50</option>
+                    </select> records at a time.
+                </div>
+            </div>
+
         </div>
-            <div class="col-md-4">
-                <input ng-model="searchbank.$" placeholder="Search Anything" style="height: 29px;" type="text" />
+        <img ng-if="showrecord1"
+            src="https://media2.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.webp?cid=790b76115cc5f3165a6b4b78739adbc5&rid=giphy.webp">
+        <div id = "accordion">
+            <div class="table-responsive container" ng-if="showrecord">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Bank Name
+                            </th>
+                            <th>
+                                IFSC
+                            </th>
+
+                            <th>
+                                Branch
+                            </th>
+
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        <tr
+                            ng-repeat="bank in data.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage))  | filter:searchbank:strict">
+                            <td>
+                                <a ng-click="getDetails(bank.ifsc)" data-toggle="collapse" data-target="#abc"
+                                    href=''>{{bank.bank_name}}</a>
+
+                            </td>
+
+                            <td>
+                                {{bank.ifsc}}
+                            </td>
+
+                            <td>
+                                {{bank.branch}}
+                            </td>
+
+                        </tr>
+                        <tr ng-if="showdetails" class="collapse" id="abc" data-parent="#accordion">
+                            <td colspan="6">
+                                <table border="0" cellspacing="0" cellpadding="0">
+                                    <tr class="top-purpal-color-row">
+                                        <th>
+                                            Bank Name
+                                        </th>
+                                        <th>
+                                            IFSC
+                                        </th>
+
+                                        <th>
+                                            Branch
+                                        </th>
+                                        <th>
+
+                                            Address
+
+                                        </th>
+                                        <th>
+                                            STATE
+                                        </th>
+                                        <th>
+                                            CITY
+                                        </th>
+
+
+
+                                    </tr>
+                                    <tr>
+                                        <!-- <td>{{oi.Design.title}}</td> -->
+                                        <td>{{result.bank_name}}</td>
+                                        <td>{{result.ifsc}}</td>
+                                        <td>{{result.branch}}</td>
+                                        <td>{{result.address}}</td>
+                                        <td>{{result.state}}</td>
+                                        <td>{{result.city}}</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
 
             </div>
-            <div class ="col-md-4">
-                View <select ng-model="viewby" ng-change="setItemsPerPage(viewby)"class="col-md-3">
-                    <option>5</option>
-                    <option>10</option>
-                    <option>20</option>
-                    <option>30</option>
-                    <option>40</option>
-                    <option>50</option>
-                </select> records at a time.
-            </div>
         </div>
 
-        </div>
-        <img ng-if="showrecord1" src="https://media2.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.webp?cid=790b76115cc5f3165a6b4b78739adbc5&rid=giphy.webp">
-        <div class="table-responsive"ng-if = "showrecord">
-            <table class="table" >
-                <thead>
-                    <tr>
-                        <th>
-                            Bank Name
-                        </th>
-                        <th>
-                            IFSC
-                        </th>
+        <pagination style="margin-left: 327px;" ng-show="showrecord" total-items="totalItems" ng-model="currentPage"
+            max-size="maxSize" class="pagination-sm container" boundary-links="true" items-per-page="itemsPerPage">
+        </pagination>
 
-                        <th>
-                            Branch
-                        </th>
-                        <th>
-
-                            Address
-
-                        </th>
-
-                    </tr>
-
-                </thead>
-                <tbody>
-                    <tr
-                        ng-repeat="bank in data.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage))  | filter:searchbank:strict">
-                        <td>
-                                <a ng-click="getDetails(bank.ifsc)" href=''>{{bank.bank_name}}</a>
-                            
-                        </td>
-
-                        <td>
-                            {{bank.ifsc}}
-                        </td>
-
-                        <td>
-                            {{bank.branch}}
-                        </td>
-                        <td>
-                            {{bank.address}}
-                        </td>
-
-
-                    </tr>
-
-                </tbody>
-
-            </table>
-
-        </div>
-      
-            <pagination ng-show = "showrecord" total-items="totalItems" ng-model="currentPage" max-size="maxSize" class="pagination-sm"
-                boundary-links="true" items-per-page="itemsPerPage"></pagination>
-         
 
     </div>
 

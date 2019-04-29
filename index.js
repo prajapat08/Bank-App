@@ -1,8 +1,8 @@
-(function() {
+ (function() {
    angular
-      .module('myApp', ['ui.bootstrap'])
+      .module('myApp', ['ui.bootstrap','ngStorage'])
       
-      .controller('main', ['$scope','$http',
+      .controller('main', ['$scope','$http','$localStorage',
         function ($scope, $http) { 
           $scope.showrecord = false;
           $scope.showrecord1 = false;
@@ -10,6 +10,8 @@
               $scope.showrecord = false;
               $scope.showrecord1 = true;
               $scope.data = '';
+              $scope.showdetails = false;
+              $scope.arrayresult =[];
               
     
              $http.get('https://vast-shore-74260.herokuapp.com/banks?city=' + location, {cache: true})
@@ -36,15 +38,30 @@
                 $scope.currentPage = 1; 
               }
 
+            
+
              });
             }
 
             $scope.getDetails = function(ifsc){
-              var result = $scope.data.find( bank => bank.ifsc == ifsc );
-              console.log(result);
-              alert("Bank Details \n BANK NAME: " +result.bank_name +" \n IFSC: "+result.ifsc+"\n Bank Id: "+result.bank_id+
-              "\n BRANCH: "+result.branch +"\n CITY: "+result.city +"\n STATE: "+result.state );
+              $scope.showdetails = true;
+              $scope.result = $scope.data.find( bank => bank.ifsc == ifsc );
+               
+              console.log($scope.arrayresult)
+              for(var j = 0; j<$scope.totalItems; j++){
+                $scope.bank_ifsc = $scope.data[j].ifsc;
+                $scope.result = $scope.data.find( bank => bank.ifsc == ifsc );
+                $scope.arrayresult.push($scope.bank_ifsc);
+              }
             }
+               $scope.addfavorite = function(ifsc)
+               {
+                $localStorage.message = ifsc;
+                
+               }
+              // alert("Bank Details \n BANK NAME: " +result.bank_name +" \n IFSC: "+result.ifsc+"\n Bank Id: "+result.bank_id+
+              // "\n BRANCH: "+result.branch +"\n CITY: "+result.city +"\n STATE: "+result.state );
+            
  
         }
       ]);  
